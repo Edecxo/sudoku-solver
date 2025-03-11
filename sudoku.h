@@ -1,9 +1,9 @@
 typedef struct Row {
-  char row[9];
+  char *row;
 } row_t;
 
 typedef struct Column {
-  char column[9];
+  char *column;
 } column_t;
 
 typedef struct Coordinates {
@@ -13,13 +13,13 @@ typedef struct Coordinates {
 
 typedef struct Box {
   coords_t coords;
-  char box[9];
+  char *box;
 } box_t;
 
 typedef struct Sudoku {
-  row_t rows[9];
-  column_t columns[9];
-  box_t boxes[9];
+  row_t *rows;
+  column_t *columns;
+  box_t *boxes;
 } sudoku_t;
 
 sudoku_t *blank_sudoku_new();
