@@ -25,3 +25,7 @@ typedef struct Sudoku {
 sudoku_t *blank_sudoku_new();
 void sudoku_print(sudoku_t *sudoku);
 void sudoku_free(sudoku_t *sudoku);
+void sudoku_populate(sudoku_t *sudoku, char *input);
+void sudoku_sync(sudoku_t *sudoku);
+int sudoku_test_allocation(sudoku_t *sudoku);
+char *get_input_string(char *filepath);
