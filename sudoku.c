@@ -14,7 +14,7 @@ sudoku_t *blank_sudoku_new() {
     sudoku_free(sudoku);
     return;
   }
-  sudoku->columns = malloc(sizeof(column_t) * 9);
+  sudoku->columns= malloc(sizeof(column_t) * 9);
   if (sudoku->columns == NULL) {
     sudoku_free(sudoku);
     return;
@@ -28,11 +28,20 @@ sudoku_t *blank_sudoku_new() {
   // Allocate memory for sudoku structs. Initialize with char '?'
   for (int i = 0; i < 9; i++) {
     sudoku->rows[i].row = malloc(sizeof(char) * 9);
-    if (sudoku->rows[i].row == NULL) return;
-    sudoku->columns[i].column = malloc(sizeof(char) * 9);
-    if (sudoku->columns[i].column == NULL) return;
+    if (sudoku->rows[i].row == NULL) {
+        sudoku_free(sudoku);
+        return;
+    }
+    sudoku->columns[i].column= malloc(sizeof(char) * 9);
+    if (sudoku->columns[i].column == NULL) {
+        sudoku_free(sudoku);
+        return;
+    }
     sudoku->boxes[i].box= malloc(sizeof(char) * 9);
-    if (sudoku->boxes[i].box== NULL) return;
+    if (sudoku->boxes[i].box== NULL) {
+        sudoku_free(sudoku);
+        return;
+    }
   }
 
   for (int i = 0; i < 9; i++) {
@@ -50,8 +59,8 @@ int sudoku_test_allocation(sudoku_t *sudoku) {
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
       t = sudoku->rows[i].row[j];
-      //t = sudoku->columns[i].column[j];
-      //t = sudoku->boxes[i].box[j];
+      t = sudoku->columns[i].column[j];
+      t = sudoku->boxes[i].box[j];
     }
   }
   return 0;
@@ -63,7 +72,11 @@ void sudoku_sync(sudoku_t *sudoku) {
     sudoku->boxes[i].coords.y = floor(i / 3);
     for (int j = 0; j < 9; j++) {
       char value = sudoku->rows[i].row[j];
-      sudoku->columns[i].column[j] = value;
+      sudoku->columns[j].column[i] = value;
+      int idxx = floor(i / 3);
+      int idxy = floor(j / 3);
+      //sudoku->boxes[idxx].box[idxy] = value;
+      sudoku->boxes[i].box[j] = value;
     }
   }
 }
@@ -82,6 +95,42 @@ void sudoku_print(sudoku_t *sudoku) {
     printf("|\n");
     // Print break after every third row. Hardcoded because there's only two
     if (i == 2 || i == 5) {
+      printf("|-------+-------+-------|\n");
+    }
+  }
+  printf("\\-------+-------+-------/\n");
+}
+
+void sudoku_print_columns(sudoku_t *sudoku) {
+  printf("/-------+-------+-------\\\n");
+  for (int i = 0; i < 9; i++) {
+    for (int j = 0; j < 9; j += 3) {
+    printf("| %c %c %c ",
+        sudoku->columns[j].column[i], sudoku->columns[j+1].column[i], sudoku->columns[j+2].column[i]);
+    }
+    printf("|\n");
+    // Print break after every third row. Hardcoded because there's only two
+    if (i == 2 || i == 5) {
+      printf("|-------+-------+-------|\n");
+    }
+  }
+  printf("\\-------+-------+-------/\n");
+}
+
+void sudoku_print_boxes(sudoku_t *sudoku) {
+  printf("/-------+-------+-------\\\n");
+  for (int i = 0; i < 9; i += 3) {
+    for (int j = 0; j < 9; j += 3) {
+      int idxy = floor(j / 3);
+      int idxx = floor(i % 3) * 3;
+      printf("| %c %c %c ",
+          sudoku->boxes[idxy].box[idxx], sudoku->boxes[idxy].box[idxx+1], sudoku->boxes[idxy].box[idxx+2]);
+      printf("| %c %c %c ",
+          sudoku->boxes[idxy+1].box[idxx], sudoku->boxes[idxy+1].box[idxx+1], sudoku->boxes[idxy+1].box[idxx+2]);
+      printf("| %c %c %c |\n",
+          sudoku->boxes[idxy+2].box[idxx], sudoku->boxes[idxy+2].box[idxx+1], sudoku->boxes[idxy+2].box[idxx+2]);
+    }
+    if (i == 0 || i == 3) {
       printf("|-------+-------+-------|\n");
     }
   }

@@ -15,8 +15,17 @@ void main() {
   printf("Populating...\n");
   sudoku_populate(sudoku, input_string);
 
-  printf("Printing...\n");
+  printf("Printing rows...\n");
   sudoku_print(sudoku);
+
+  printf("Syncing...\n");
+  sudoku_sync(sudoku);
+
+  printf("Printing columns...\n");
+  sudoku_print_columns(sudoku);
+
+  printf("Printing boxes...\n");
+  sudoku_print_boxes(sudoku);
 
   printf("Testing allocation...\n");
   sudoku_test_allocation(sudoku);
