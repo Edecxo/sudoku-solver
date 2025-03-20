@@ -73,10 +73,9 @@ void sudoku_sync(sudoku_t *sudoku) {
     for (int j = 0; j < 9; j++) {
       char value = sudoku->rows[i].row[j];
       sudoku->columns[j].column[i] = value;
-      int idxx = floor(i / 3);
-      int idxy = floor(j / 3);
-      //sudoku->boxes[idxx].box[idxy] = value;
-      sudoku->boxes[i].box[j] = value;
+      int box_idx = (i / 3) * 3 + (j / 3);
+      int cell_idx = (i % 3) * 3 + (j % 3);
+      sudoku->boxes[box_idx].box[cell_idx] = value;
     }
   }
 }
@@ -121,14 +120,11 @@ void sudoku_print_boxes(sudoku_t *sudoku) {
   printf("/-------+-------+-------\\\n");
   for (int i = 0; i < 9; i += 3) {
     for (int j = 0; j < 9; j += 3) {
-      int idxy = floor(j / 3);
-      int idxx = floor(i % 3) * 3;
-      printf("| %c %c %c ",
-          sudoku->boxes[idxy].box[idxx], sudoku->boxes[idxy].box[idxx+1], sudoku->boxes[idxy].box[idxx+2]);
-      printf("| %c %c %c ",
-          sudoku->boxes[idxy+1].box[idxx], sudoku->boxes[idxy+1].box[idxx+1], sudoku->boxes[idxy+1].box[idxx+2]);
-      printf("| %c %c %c |\n",
-          sudoku->boxes[idxy+2].box[idxx], sudoku->boxes[idxy+2].box[idxx+1], sudoku->boxes[idxy+2].box[idxx+2]);
+      printf("| %c %c %c | %c %c %c | %c %c %c |\n",
+          sudoku->boxes[i].box[j], sudoku->boxes[i].box[j+1], sudoku->boxes[i].box[j+2],
+          sudoku->boxes[i+1].box[j], sudoku->boxes[i+1].box[j+1], sudoku->boxes[i+1].box[j+2],
+          sudoku->boxes[i+2].box[j], sudoku->boxes[i+2].box[j+1], sudoku->boxes[i+2].box[j+2]
+          );
     }
     if (i == 0 || i == 3) {
       printf("|-------+-------+-------|\n");
