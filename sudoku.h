@@ -1,3 +1,5 @@
+#pragma once
+
 typedef struct Row {
   char *row;
 } row_t;
